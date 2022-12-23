@@ -1,46 +1,22 @@
-#version: '3.8'
-#services:
-#  db:
-#    image: cliodhnanee/passenger:2.0
-#    ports:
-#      - "8080:8081"
-#    environment:
-#      - spring.datasource.url=jdbc:postgresql://db:5432/atu
-#    networks:
-#      - db
-#    depends_on:
-#      - db
-#
-#networks:
-#  db:
+version: '2'
 
 services:
-  backend:
-    build: Passenger
-    ports:
-      - 8080:8080
+  app:
+    image: 'cliodhnanee/passenger:2.0'
+    build:
+      context: .
+    container_name: app
+    depends_on:
+      - db
     environment:
-      - POSTGRES_DB=example
-    networks:
-      - spring-postgres
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/compose-postgres
+      - SPRING_DATASOURCE_USERNAME=compose-postgres
+      - SPRING_DATASOURCE_PASSWORD=compose-postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+
   db:
-    image: postgres
-    restart: always
-    secrets:
-      - d
-    volumes:
-      - database-data:/var/lib/postgresql/data
-    networks:
-      - spring-postgres
+    image: 'postgres:13.1-alpine'
+    container_name: db
     environment:
-      - POSTGRES_DB=example
-      - POSTGRES_PASSWORD_FILE=/run/secrets/database
-    expose:
-      - 5432
-volumes:
-  database-data:
-secrets:
-  database-passenger:
-    file: database
-networks:
-  spring-postgres:
+      - POSTGRES_USER=compose-postgres
+      - POSTGRES_PASSWORD=compose-postgres
