@@ -1,0 +1,46 @@
+#version: '3.8'
+#services:
+#  db:
+#    image: cliodhnanee/passenger:2.0
+#    ports:
+#      - "8080:8081"
+#    environment:
+#      - spring.datasource.url=jdbc:postgresql://db:5432/atu
+#    networks:
+#      - db
+#    depends_on:
+#      - db
+#
+#networks:
+#  db:
+
+services:
+  backend:
+    build: Passenger
+    ports:
+      - 8080:8080
+    environment:
+      - POSTGRES_DB=example
+    networks:
+      - spring-postgres
+  db:
+    image: postgres
+    restart: always
+    secrets:
+      - d
+    volumes:
+      - database-data:/var/lib/postgresql/data
+    networks:
+      - spring-postgres
+    environment:
+      - POSTGRES_DB=example
+      - POSTGRES_PASSWORD_FILE=/run/secrets/database
+    expose:
+      - 5432
+volumes:
+  database-data:
+secrets:
+  database-passenger:
+    file: database
+networks:
+  spring-postgres:

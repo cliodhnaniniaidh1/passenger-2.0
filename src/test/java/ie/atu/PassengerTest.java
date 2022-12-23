@@ -84,7 +84,7 @@ class PassengerTest {
     @Test
     void testPassengerAgeSuccess(){
         Passenger newPassenger = new Passenger("Ms", "Cliodhna", "G0038639500", "0873883598", 22);
-        assertEquals(23, newPassenger.getAge());
+        assertEquals(22, newPassenger.getAge());
     }
 
     //Test if Passenger is under 16 and will look for Illegal Argument Exception within Passenger class
